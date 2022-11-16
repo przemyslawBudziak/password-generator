@@ -3,62 +3,87 @@ package org.example;
 import java.util.Scanner;
 
 public class Menu {
-    private Generator generator;
+    private static final String MAIN_MENU = """
+            Press:
+                1 - to generate password
+                2 - to check your password
+                3 - to quit""";
+    private static final String ERROR_MESSAGE = "Input ERROR!";
+    private static final String[] YES = {"y", "yes", "Y", "YES"};
+    private static final String[] CONTENT = {"lowercase letters", "uppercase letters", "numbers", "special symbols"};
+
+    private final Scanner scanner = new Scanner(System.in);
 
     public Menu() {
     }
 
     public void start() {
-
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Press:\n" +
-                "1 - to generate password\n" +
-                "2 - to quit");
-        int option = scanner.nextInt();
-        scanner.nextLine();
-        while (option == 1) {
-            int length;
-            boolean[] include = new boolean[4];
-
-            System.out.print("Length: ");
-            length = scanner.nextInt();
+        int selection = 0;
+        while (selection != 3) {
+            System.out.println(MAIN_MENU);
+            if (scanner.hasNextInt()) {
+                selection = scanner.nextInt();
+            } else {
+                selection = 0;
+            }
             scanner.nextLine();
-            System.out.print("Include lowercase letters [y/n]: ");
-            if (scanner.nextLine().equals("y")) {
-                include[0] = true;
+            switch (selection) {
+                case 1 -> generatePassword();
+                case 2 -> checkPassword();
+                case 3 -> {}
+                default -> System.out.println(ERROR_MESSAGE);
             }
-            System.out.print("Include uppercase letters [y/n]: ");
-            if (scanner.nextLine().equals("y")) {
-                include[1] = true;
-            }
-            System.out.print("Include numbers [y/n]: ");
-            if (scanner.nextLine().equals("y")) {
-                include[2] = true;
-            }
-            System.out.print("Include special symbols [y/n]: ");
-            if (scanner.nextLine().equals("y")) {
-                include[3] = true;
-            }
-
-            generator = new Generator(length, include[0],include[1], include[2], include[3]);
-            System.out.println("Password: " + generator.generate());
-
-            System.out.println("Type:\n" +
-                    "1 - to generate password\n" +
-                    "2 - to quit");
-            option = scanner.nextInt();
-            scanner.nextLine();
         }
+        scanner.close();
+    }
+
+    private void generatePassword() {
+        int length = passwordLength();
+        boolean[] include = charsToInclude();
+
+        Generator generator = new Generator(length, include[0], include[1], include[2], include[3]);
+        System.out.println("\tPASSWORD: " + generator.generate());
 
     }
 
-//    private void test(int length, boolean[] booleans) {
-//        System.out.println();
-//        System.out.print(length + " ");
-//        for (boolean b : booleans) {
-//            System.out.print(b + " ");
-//        }
-//        System.out.println();
-//    }
+    private int passwordLength() {
+        int length = -1;
+        while (length < 8 || length > 128) {
+            System.out.print("Password length (8 - 128 characters): ");
+            if (scanner.hasNextInt()) {
+                length = scanner.nextInt();
+            } else {
+                System.out.println(ERROR_MESSAGE);
+            }
+            scanner.nextLine();
+        }
+        return length;
+    }
+
+    private boolean[] charsToInclude() {
+        boolean[] include = new boolean[4];
+        int counter = 0;
+        while (counter == 0) {
+            for (int i = 0; i <= 3; i++) {
+                System.out.printf("Include %s [Y/n]: ", CONTENT[i]);
+                String s = scanner.nextLine();
+                for (String yes : YES) {
+                    if (s.equals(yes)) {
+                        include[i] = true;
+                        counter++;
+                        break;
+                    }
+                }
+            }
+            if (counter == 0) {
+                System.out.println(ERROR_MESSAGE);
+            }
+        }
+        return include;
+    }
+
+    private void checkPassword() {
+        System.out.println("Checkinnnnnnnnnnn password");
+    }
 
 }
