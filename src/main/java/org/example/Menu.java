@@ -42,7 +42,7 @@ public class Menu {
         boolean[] include = charsToInclude();
 
         Generator generator = new Generator(length, include[0], include[1], include[2], include[3]);
-        System.out.println("\tPASSWORD: " + generator.generate());
+        System.out.println("\n\tPASSWORD: " + generator.generate() + "\n");
 
     }
 
@@ -83,7 +83,25 @@ public class Menu {
     }
 
     private void checkPassword() {
-        System.out.println("Checkinnnnnnnnnnn password");
+        System.out.print("Your password: ");
+        String password = scanner.nextLine();
+        PasswordScore passwordScore = new PasswordScore(password.length(), checkCardinality(password));
+        passwordScore.timeToCrack();
     }
 
+    private int checkCardinality(String password) {
+        int cardinality = 0;
+        if (password.matches(".*[a-z].*")) {
+            cardinality += 26;
+        }
+        if (password.matches(".*[A-Z].*")) {
+            cardinality += 26;
+        }
+        if (password.matches(".*\\d.*")) {
+            cardinality += 10;
+        }
+        // TODO cardinality for special symbols
+
+        return cardinality;
+    }
 }

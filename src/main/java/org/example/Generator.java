@@ -1,16 +1,16 @@
 package org.example;
 
 public class Generator {
-    private int length;
-    private boolean includeAlphaLower;
-    private boolean includeAlphaUpper;
-    private boolean includeNumbers;
-    private boolean includeSpecial;
+    private final int length;
+    private final boolean includeAlphaLower;
+    private final boolean includeAlphaUpper;
+    private final boolean includeNumbers;
+    private final boolean includeSpecial;
 
     private static final String ALPHA_LOWER = "abcdefghijklmnopqrstuvwxyz";
     private static final String ALPHA_UPPER = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     private static final String NUMBERS = "0123456789";
-    private static final String SPECIAL_CHARS = "~!@#$%^&*()_+-=[]{};:,.<>/?";
+    private static final String SPECIAL_CHARS = "!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~";
 
     public Generator(int length, boolean includeAlphaLower, boolean includeAlphaUpper, boolean includeNumbers, boolean includeSpecial) {
         this.length = length;
