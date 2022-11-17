@@ -20,7 +20,7 @@ public class Generator {
         this.includeSpecial = includeSpecial;
     }
 
-    public String generate() {
+    public Password generate() {
         String charsToInclude = charsToInclude();
         StringBuilder stringBuilder = new StringBuilder();
         int length = this.length;
@@ -29,7 +29,7 @@ public class Generator {
             stringBuilder.append(charsToInclude.charAt(rand));
             length--;
         }
-        return stringBuilder.toString();
+        return new Password(stringBuilder.toString());
     }
 
     private String charsToInclude() {
@@ -46,7 +46,6 @@ public class Generator {
         if (this.includeSpecial) {
             stringBuilder.append(SPECIAL_CHARS);
         }
-
         return stringBuilder.toString();
     }
 }

@@ -42,9 +42,9 @@ public class Menu {
         boolean[] include = charsToInclude();
 
         Generator generator = new Generator(length, include[0], include[1], include[2], include[3]);
-        String password = generator.generate();
-        System.out.println("\n\tPASSWORD: " + password);
-        checkPassword(password);
+        Password password = generator.generate();
+        System.out.println("\n\tPASSWORD: " + password.toString());
+        passwordScore(password);
     }
 
     private int passwordLength() {
@@ -66,7 +66,7 @@ public class Menu {
         int counter = 0;
         while (counter == 0) {
             for (int i = 0; i <= 3; i++) {
-                System.out.printf("Include %s [Y/n]: ", CONTENT[i]);
+                System.out.printf("Include %s? [Y/n]: ", CONTENT[i]);
                 String s = scanner.nextLine();
                 for (String yes : YES) {
                     if (s.equals(yes)) {
@@ -85,31 +85,13 @@ public class Menu {
 
     private void checkPassword() {
         System.out.print("Your password: ");
-        String password = scanner.nextLine();
-        checkPassword(password);
+        Password password = new Password(scanner.nextLine());
+        passwordScore(password);
     }
 
-    private void checkPassword(String password) {
-        int length = password.length();
-        int cardinality = checkCardinality(password);
-        PasswordScore passwordScore = new PasswordScore(length, cardinality);
+    private void passwordScore(Password password) {
+        PasswordScore passwordScore = new PasswordScore(password);
         passwordScore.timeToCrack();
     }
 
-    private int checkCardinality(String password) {
-        int cardinality = 0;
-        if (password.matches(".*[a-z].*")) {
-            cardinality += 26;
-        }
-        if (password.matches(".*[A-Z].*")) {
-            cardinality += 26;
-        }
-        if (password.matches(".*\\d.*")) {
-            cardinality += 10;
-        }
-        if (password.matches(".*\\W.*")) {
-            cardinality += 32;
-        }
-        return cardinality;
-    }
 }
