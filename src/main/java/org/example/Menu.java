@@ -42,8 +42,9 @@ public class Menu {
         boolean[] include = charsToInclude();
 
         Generator generator = new Generator(length, include[0], include[1], include[2], include[3]);
-        System.out.println("\n\tPASSWORD: " + generator.generate() + "\n");
-
+        String password = generator.generate();
+        System.out.println("\n\tPASSWORD: " + password);
+        checkPassword(password);
     }
 
     private int passwordLength() {
@@ -85,7 +86,13 @@ public class Menu {
     private void checkPassword() {
         System.out.print("Your password: ");
         String password = scanner.nextLine();
-        PasswordScore passwordScore = new PasswordScore(password.length(), checkCardinality(password));
+        checkPassword(password);
+    }
+
+    private void checkPassword(String password) {
+        int length = password.length();
+        int cardinality = checkCardinality(password);
+        PasswordScore passwordScore = new PasswordScore(length, cardinality);
         passwordScore.timeToCrack();
     }
 
@@ -100,8 +107,9 @@ public class Menu {
         if (password.matches(".*\\d.*")) {
             cardinality += 10;
         }
-        // TODO cardinality for special symbols
-
+        if (password.matches(".*\\W.*")) {
+            cardinality += 32;
+        }
         return cardinality;
     }
 }
