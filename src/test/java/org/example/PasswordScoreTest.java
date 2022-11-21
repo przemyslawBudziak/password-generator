@@ -5,36 +5,29 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import java.math.BigInteger;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 
-class PasswordTest {
-    private Password password;
+class PasswordScoreTest {
 
-    @ParameterizedTest
-    @MethodSource("getLengthArguments")
-    void getLength(String newPassword, int expected) {
-        password = new Password(newPassword);
-        assertEquals(expected, password.getLength());
-    }
+    private PasswordScore passwordScore;
 
-    static Stream<Arguments> getLengthArguments() {
-        return Stream.of(
-                arguments("", 0),
-                arguments("aaaaaaaaaa", 10)
-        );
+    @Test
+    void secToCrack() {
     }
 
     @ParameterizedTest
-    @MethodSource("getCardinalityArguments")
-    void getCardinality(String newPassword, int expected) {
-        password = new Password(newPassword);
-        assertEquals(expected, password.getCardinality());
+    @MethodSource("cardinalityArguments")
+    void getCardinality(String testPassword, int cardinality) {
+        Password password = new Password(testPassword);
+        passwordScore = new PasswordScore(password);
+        assertEquals(BigInteger.valueOf(cardinality), passwordScore.getCardinality());
     }
 
-    static Stream<Arguments> getCardinalityArguments() {
+    static Stream<Arguments> cardinalityArguments() {
         return Stream.of(
                 arguments("", 0),
                 arguments("asdf", 26),
@@ -56,8 +49,10 @@ class PasswordTest {
     }
 
     @Test
-    void testToString() {
-        password = new Password("password");
-        assertEquals("password", password.toString());
+    void getCombinations() {
+    }
+
+    @Test
+    void timeToCrack() {
     }
 }

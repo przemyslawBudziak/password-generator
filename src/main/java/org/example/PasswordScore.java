@@ -10,11 +10,17 @@ public class PasswordScore {
         this.password = password;
     }
 
-    private BigInteger secToCrack() {
-        BigInteger bigCardinality = BigInteger.valueOf(password.getCardinality());
-        BigInteger combinations = bigCardinality.pow(password.getLength());
+    BigInteger secToCrack() {
         BigInteger HashPerSec = BigInteger.valueOf(632_000_000_000L);
-        return combinations.divide(HashPerSec);
+        return getCombinations().divide(HashPerSec);
+    }
+
+    BigInteger getCombinations() {
+        return getCardinality().pow(password.getLength());
+    }
+
+    BigInteger getCardinality() {
+        return BigInteger.valueOf(password.getCardinality());
     }
 
     void timeToCrack() {
