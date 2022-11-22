@@ -1,6 +1,5 @@
 package org.example;
 
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -14,15 +13,31 @@ import static org.junit.jupiter.params.provider.Arguments.arguments;
 class PasswordScoreTest {
 
     private PasswordScore passwordScore;
+    private Password password;
 
-    @Test
-    void secToCrack() {
+    @ParameterizedTest
+    @MethodSource("secToCrackArguments")
+    void secToCrack(String newPassword, long sec) {
+        password = new Password(newPassword);
+        passwordScore = new PasswordScore(password);
+        assertEquals(BigInteger.valueOf(sec), passwordScore.secToCrack());
+    }
+
+    static Stream<Arguments> secToCrackArguments() {
+        return Stream.of(
+                arguments("aabbaabba", 8L),
+                arguments("aaaaabbbbb12345", 349800505887L),
+                arguments("aaaaabbbbbAB", 618476276L),
+                arguments("aaaaabbbbbABABC", 86962712227877L),
+                arguments("ABCDE12345&*(^", 71516738374622L),
+                arguments("aBCDE1234&*(^", 70785616443892L)
+        );
     }
 
     @ParameterizedTest
     @MethodSource("cardinalityArguments")
     void getCardinality(String testPassword, int cardinality) {
-        Password password = new Password(testPassword);
+        password = new Password(testPassword);
         passwordScore = new PasswordScore(password);
         assertEquals(BigInteger.valueOf(cardinality), passwordScore.getCardinality());
     }
@@ -48,11 +63,20 @@ class PasswordScoreTest {
         );
     }
 
-    @Test
-    void getCombinations() {
+    @ParameterizedTest
+    @MethodSource("getCombinationsArguments")
+    void getCombinations(String testPassword, long combinations) {
+        password = new Password(testPassword);
+        passwordScore = new PasswordScore(password);
+        assertEquals(BigInteger.valueOf(combinations), passwordScore.getCombinations());
     }
 
-    @Test
-    void timeToCrack() {
+    static Stream<Arguments> getCombinationsArguments() {
+        return Stream.of(
+                arguments("", 1L),
+                arguments("5", 10L),
+                arguments("abcdefgh", 208827064576L),
+                arguments("aaaaabbAB", 2779905883635712L)
+        );
     }
 }
